@@ -2,12 +2,17 @@
 require_once '../config/config.php';
 require_once '../lib/db.php';
 
+date_default_timezone_set('Asia/Shanghai');
+
 function exec_xhprof_disable(){
     $xhprof_data = xhprof_disable();
-    $url = $_SERVER['REQUEST_URI']. '?' . urlencode($_SERVER['QUERY_STRING']);
+    $url = 'http://' . php_uname('n') . ':' .$_SERVER['SERVER_PORT'].$_SERVER['REQUEST_URI'];
+    if(!empty($_SERVER['QUERY_STRING'])) {
+        $url .= '?' . urlencode($_SERVER['QUERY_STRING']);
+    }
+
     $data = array(
         'url' => $url,
-        'host' => php_uname('n'),
         'method' => $_SERVER['REQUEST_METHOD'],
         'time' => $_SERVER['REQUEST_TIME'],
         'xhprof_data' => $xhprof_data
@@ -29,5 +34,3 @@ function test() {
 }
 test();
 
-//echo "执行时长:".sprintf('%.2f',$xhprof_data['main()']['wt']/1000/1000)."<br/>";
-//echo "<a target='_blank' href='./view-graph.php?log=".htmlspecialchars(serialize($xhprof_data))."'>查看图表</a><br/>";

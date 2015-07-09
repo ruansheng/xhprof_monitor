@@ -41,7 +41,9 @@
 require_once dirname(__FILE__).'/config/config.php';
 require_once dirname(__FILE__).'/lib/db.php';
 
-$pageCount = 3;
+date_default_timezone_set('Asia/Shanghai');
+
+$pageCount = $page_count;
 
 //计算偏移量
 $page = $_GET['page'];
@@ -49,11 +51,12 @@ if(!is_numeric($page)) {
     $page = 1;
 }
 
-$start = ($page - 1) * $pageCount + 1;
-$end = $page * $pageCount;
+$start = ($page - 1) * $pageCount;
+$end = $page * $pageCount - 1;
 
 //查询数据
 $Redis = getRedis($config);
+$count = 0;
 if($Redis) {
     $count = $Redis->zCard($redis_key);
     $rows = $Redis->zRevRange($redis_key, $start, $end);   //取最新的100个
@@ -87,7 +90,7 @@ foreach($rows as $v) {
 
     $list[] = array(
         'method_class' => $method_class,
-        'url' => $item['host'] . $item['url'],
+        'url' => $item['url'],
         'method' => $item['method'],
         'time' => date('Y-m-d H:i:s', $item['time']),
         'execute_time' => $execute_time,
@@ -117,11 +120,13 @@ foreach($rows as $v) {
 </table>
 <nav id="xhprof-page">
     <ul class="pagination">
-        <li id="previous">
-            <a href="" aria-label="Previous">
-                <span aria-hidden="true">&laquo;</span>
-            </a>
-        </li>
+        <?php if($count > 0){?>
+            <li id="previous">
+                <a href="" aria-label="Previous">
+                    <span aria-hidden="true">&laquo;</span>
+                </a>
+            </li>
+        <?php }?>
         <?php for($i = 1; $i <= $pageNum; $i++){?>
                 <?php if($i == $page){?>
                     <li class="active"><a href="./index.php?page=<?php echo $i;?>"><?php echo $i;?></a></li>
@@ -129,11 +134,13 @@ foreach($rows as $v) {
                     <li><a href="./index.php?page=<?php echo $i;?>"><?php echo $i;?></a></li>
                 <?php }?>
         <?php }?>
-        <li id="next">
-            <a href="" aria-label="Next">
-                <span aria-hidden="true">&raquo;</span>
-            </a>
-        </li>
+        <?php if($count > 0){?>
+            <li id="next">
+                <a href="" aria-label="Next">
+                    <span aria-hidden="true">&raquo;</span>
+                </a>
+            </li>
+        <?php }?>
     </ul>
 </nav>
 <form action="./xhprof/view-graph.php" id="form-submit" method="post" target="_blank">
