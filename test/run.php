@@ -28,7 +28,7 @@ register_shutdown_function('exec_xhprof_disable');
 xhprof_enable(XHPROF_FLAGS_CPU | XHPROF_FLAGS_MEMORY);
 
 function test() {
-    for ($i = 0; $i < 4; $i++) {
+    for ($i = 0; $i < 3; $i++) {
         sleep(1);
     }
 }

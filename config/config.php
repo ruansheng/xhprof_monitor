@@ -14,4 +14,4 @@ $config = array(
 
 $redis_key = 'ququ_api_xhprof_data';    //redis zset key
 
-$page_count = 2;    //每页显示的条数
+$page_count = 10;    //每页显示的条数

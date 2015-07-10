@@ -23,8 +23,8 @@
             .w-80{
                 width:80px;
             }
-            .w-150{
-                width:150px;
+            .w-120{
+                width:120px;
             }
             .w-185{
                 width:185px;
@@ -102,16 +102,20 @@ foreach($rows as $v) {
 <p class="bg-primary title">Api 执行效率监控</p>
 <table class="table table-condensed">
     <tr>
+        <th class="active w-80">序号</td>
         <th class="active w-185">请求时间</td>
         <th class="active w-80">请求方法</th>
         <th class="active">URL</th>
-        <th class="active w-150">耗时(单位:秒)</th>
-        <th class="active w-150">查看</th>
+        <th class="active w-120">耗时(单位:秒)</th>
+        <th class="active w-120">查看</th>
     </tr>
-    <?php foreach($list as $v){ ?>
+    <?php foreach($list as $key=>$v){ ?>
     <tr>
+        <td class="active"><?php echo $key+1;?></td>
         <td class="active"><?php echo $v['time'];?></td>
-        <td class="active"><span class="label <?php echo $method_class;?>"><?php echo $v['method'];?></span></td>
+        <td class="active">
+            <span class="label <?php echo $v['method_class'];?>"><?php echo $v['method'];?></span>
+        </td>
         <td class="active"><?php echo $v['url'];?></td>
         <td class="active" style="background:<?php echo $v['execute_time_color'];?>;"><?php echo $v['execute_time'];?></td>
         <td class="active"><a href="javascript:void(0);" xhprof-graph='<?php echo $v["xhprof_data"];?>'>图表</a></td>
